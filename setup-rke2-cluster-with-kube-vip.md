@@ -106,6 +106,7 @@ curl -s https://kube-vip.io/manifests/rbac.yaml > /var/lib/rancher/rke2/server/m
 # Pull image with container runtime
 ctr image pull docker.io/plndr/kube-vip:$TAG
 
+# Lệnh này chạy mỗi khi mở lại IP máy unbutu
 alias kube-vip="ctr run --rm --net-host docker.io/plndr/kube-vip:$TAG vip /kube-vip"
 
 # generate manifest
@@ -120,14 +121,16 @@ kube-vip manifest daemonset \
     --inCluster | tee /var/lib/rancher/rke2/server/manifests/kube-vip.yaml
 
 # check kube-vip pod and daemonset
-master1$ k -n kube-system get ds
+master1$ k -n kube-system get ds #( kubectl -n kube-system get ds )
+
+
 
 #master1$ k -n kube-system get pod -l name=kube-vip-ds
 master1$ k -n kube-system get pod
 NAME                READY   STATUS    RESTARTS   AGE
 kube-vip-ds-2vjkz   1/1     Running   0          2m1s
 
-# Đã làm xong tới đây ------------------------------------------------------------------------------ >
+
 
 # check vip
 master1$ ip a s | grep -B 5 ens160
@@ -182,6 +185,8 @@ HERE
 # Retrieve the token
 master1$  cat /var/lib/rancher/rke2/server/token
 ####hidden_string#####
+
+# Đã làm xong tới đây ------------------------------------------------------------------------------ >
 ```
 
 
@@ -283,5 +288,3 @@ worker01$ systemctl start rke2-agent
 ### Troubleshoot
 
 CoreDNS loop: <https://fossies.org/linux/coredns/man/coredns-loop.7>
-
-
